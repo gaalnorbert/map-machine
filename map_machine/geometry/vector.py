@@ -78,6 +78,8 @@ class Polyline:
         """Make shorten part specified with index."""
         index_2: int = 1 if index == 0 else -2
         diff: np.ndarray = self.points[index_2] - self.points[index]
+        if np.allclose(diff, 0):
+            diff = np.array([1.e-08, 1.e-08])
         self.points[index] = (
             self.points[index] + diff / np.linalg.norm(diff) * length
         )
@@ -132,6 +134,8 @@ class Segment:
         self.y = ((self.point_1 + self.point_2) / 2.0)[1]
 
         difference: np.ndarray = point_2 - point_1
+        if np.allclose(difference, 0):
+            difference = np.array([1.e-08, 1.e-08])
         vector: np.ndarray = difference / np.linalg.norm(difference)
         if vector[0] > 0:
             vector = -vector
