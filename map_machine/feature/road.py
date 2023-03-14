@@ -430,7 +430,10 @@ class Road(Tagged):
 
         self.layer: float = 0.0
         if "layer" in tags:
-            self.layer = float(tags["layer"])
+            try:
+                self.layer = float(tags["layer"])
+            except:
+                pass
 
         self.placement_offset: float = 0.0
         self.is_transition: bool = False
