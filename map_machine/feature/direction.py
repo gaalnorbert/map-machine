@@ -72,9 +72,10 @@ class Sector:
             parts: list[str] = text.split("-")
             self.start = parse_vector(parts[0])
             self.end = parse_vector(parts[1])
-            if self.start == None or self.end == None:
+            try:
+                self.main_direction = (self.start + self.end) / 2.0
+            except:
                 self.main_direction = np.array([0., 0.])
-            self.main_direction = (self.start + self.end) / 2.0
         else:
             result_angle: float
             if angle is None:
