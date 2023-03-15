@@ -9,8 +9,8 @@ import numpy as np
 __author__ = "Sergey Vartanov"
 __email__ = "me@enzet.ru"
 
-LATITUDE_MAX_DIFFERENCE: float = 0.5
-LONGITUDE_MAX_DIFFERENCE: float = 0.5
+LATITUDE_MAX_DIFFERENCE: float = 1.0
+LONGITUDE_MAX_DIFFERENCE: float = 1.0
 
 
 @dataclass
