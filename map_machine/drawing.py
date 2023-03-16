@@ -18,7 +18,7 @@ __email__ = "me@enzet.ru"
 
 PathCommands = list[Union[float, str, np.ndarray]]
 
-DEFAULT_FONT: str = "Helvetica"
+DEFAULT_FONT: str = "Meiryo, Helvetica"
 
 
 @dataclass
@@ -40,9 +40,8 @@ class Style:
 
     def draw_png_fill(self, context: Context) -> None:
         """Set style for context and draw fill."""
-        context.set_source_rgba(
-            self.fill.get_red(), self.fill.get_green(), self.fill.get_blue()
-        )
+        context.set_source_rgba(self.fill.get_red(), self.fill.get_green(),
+                                self.fill.get_blue())
         context.fill()
 
     def draw_png_stroke(self, context: Context) -> None:
@@ -64,9 +63,8 @@ class Drawing:
         self.width: int = width
         self.height: int = height
 
-    def rectangle(
-        self, point_1: np.ndarray, point_2: np.ndarray, style: Style
-    ) -> None:
+    def rectangle(self, point_1: np.ndarray, point_2: np.ndarray,
+                  style: Style) -> None:
         """Draw rectangle."""
         raise NotImplementedError
 
@@ -78,9 +76,8 @@ class Drawing:
         """Draw path."""
         raise NotImplementedError
 
-    def text(
-        self, text: str, point: np.ndarray, color: Color = Color("black")
-    ) -> None:
+    def text(self, text: str, point: np.ndarray,
+             color: Color = Color("black")) -> None:
         """Draw text."""
         raise NotImplementedError
 
@@ -95,12 +92,10 @@ class SVGDrawing(Drawing):
     def __init__(self, file_path: Path, width: int, height: int) -> None:
         super().__init__(file_path, width, height)
         self.image: svgwrite.Drawing = svgwrite.Drawing(
-            str(file_path), (width, height)
-        )
+            str(file_path), (width, height))
 
-    def rectangle(
-        self, point_1: np.ndarray, point_2: np.ndarray, style: Style
-    ) -> None:
+    def rectangle(self, point_1: np.ndarray, point_2: np.ndarray,
+                  style: Style) -> None:
         """Draw rectangle."""
         size: np.ndarray = point_2 - point_1
         rectangle: Rect = Rect(
@@ -123,13 +118,11 @@ class SVGDrawing(Drawing):
         style.update_svg_element(path)
         self.image.add(path)
 
-    def text(
-        self, text: str, point: np.ndarray, color: Color = Color("black")
-    ) -> None:
+    def text(self, text: str, point: np.ndarray,
+             color: Color = Color("black")) -> None:
         """Draw text."""
         self.image.add(
-            Text(text, (float(point[0]), float(point[1])), fill=color)
-        )
+            Text(text, (float(point[0]), float(point[1])), fill=color))
 
     def write(self) -> None:
         """Write image to the SVG file."""
@@ -142,14 +135,12 @@ class PNGDrawing(Drawing):
 
     def __init__(self, file_path: Path, width: int, height: int) -> None:
         super().__init__(file_path, width, height)
-        self.surface: ImageSurface = ImageSurface(
-            cairo.FORMAT_ARGB32, width, height
-        )
+        self.surface: ImageSurface = ImageSurface(cairo.FORMAT_ARGB32, width,
+                                                  height)
         self.context: Context = Context(self.surface)
 
-    def rectangle(
-        self, point_1: np.ndarray, point_2: np.ndarray, style: Style
-    ) -> None:
+    def rectangle(self, point_1: np.ndarray, point_2: np.ndarray,
+                  style: Style) -> None:
         """Draw rectangle."""
         size: np.ndarray = point_2 - point_1
 
@@ -217,9 +208,12 @@ class PNGDrawing(Drawing):
                     point_3: np.ndarray = current + commands[index + 2]
                 current = point_3
                 self.context.curve_to(
-                    point_1[0], point_1[1],
-                    point_2[0], point_2[1],
-                    point_3[0], point_3[1],
+                    point_1[0],
+                    point_1[1],
+                    point_2[0],
+                    point_2[1],
+                    point_3[0],
+                    point_3[1],
                 )  # fmt: skip
                 if start_point is None:
                     start_point = point_1
@@ -257,13 +251,11 @@ class PNGDrawing(Drawing):
             self._do_path(commands)
             style.draw_png_stroke(self.context)
 
-    def text(
-        self, text: str, point: np.ndarray, color: Color = Color("black")
-    ) -> None:
+    def text(self, text: str, point: np.ndarray,
+             color: Color = Color("black")) -> None:
         """Draw text."""
-        self.context.set_source_rgb(
-            color.get_red(), color.get_green(), color.get_blue()
-        )
+        self.context.set_source_rgb(color.get_red(), color.get_green(),
+                                    color.get_blue())
         self.context.move_to(float(point[0]), float(point[1]))
         self.context.show_text(text)
 

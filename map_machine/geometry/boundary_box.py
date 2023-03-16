@@ -9,8 +9,8 @@ import numpy as np
 __author__ = "Sergey Vartanov"
 __email__ = "me@enzet.ru"
 
-LATITUDE_MAX_DIFFERENCE: float = 1.0
-LONGITUDE_MAX_DIFFERENCE: float = 1.0
+LATITUDE_MAX_DIFFERENCE: float = 10.0
+LONGITUDE_MAX_DIFFERENCE: float = 10.0
 
 
 @dataclass
@@ -39,8 +39,8 @@ class BoundaryBox:
         boundary_box = boundary_box.replace(" ", "")
 
         matcher: Optional[re.Match] = re.match(
-            "(?P<left>[0-9.-]*),(?P<bottom>[0-9.-]*),"
-            + "(?P<right>[0-9.-]*),(?P<top>[0-9.-]*)",
+            "(?P<left>[0-9.-]*),(?P<bottom>[0-9.-]*)," +
+            "(?P<right>[0-9.-]*),(?P<top>[0-9.-]*)",
             boundary_box,
         )
 
@@ -63,10 +63,8 @@ class BoundaryBox:
         if bottom >= top:
             logging.error("Negative vertical boundary.")
             return None
-        if (
-            right - left > LONGITUDE_MAX_DIFFERENCE
-            or top - bottom > LATITUDE_MAX_DIFFERENCE
-        ):
+        if (right - left > LONGITUDE_MAX_DIFFERENCE
+                or top - bottom > LATITUDE_MAX_DIFFERENCE):
             logging.error("Boundary box is too big.")
             return None
 
@@ -89,7 +87,7 @@ class BoundaryBox:
         :param height: resulting image height
         """
         lat_rad: np.ndarray = np.radians(coordinates[0])
-        n: float = 2.0 ** (zoom_level + 8.0)
+        n: float = 2.0**(zoom_level + 8.0)
 
         x: int = int((coordinates[1] + 180.0) / 360.0 * n)
         left: float = (x - width / 2.0) / n * 360.0 - 180.0
@@ -97,11 +95,9 @@ class BoundaryBox:
 
         y: int = (1.0 - np.arcsinh(np.tan(lat_rad)) / np.pi) / 2.0 * n
         bottom_radians = np.arctan(
-            np.sinh((1.0 - (y + height / 2.0) * 2.0 / n) * np.pi)
-        )
+            np.sinh((1.0 - (y + height / 2.0) * 2.0 / n) * np.pi))
         top_radians = np.arctan(
-            np.sinh((1.0 - (y - height / 2.0) * 2.0 / n) * np.pi)
-        )
+            np.sinh((1.0 - (y - height / 2.0) * 2.0 / n) * np.pi))
 
         return cls(
             left,
@@ -138,8 +134,7 @@ class BoundaryBox:
     def center(self) -> np.ndarray:
         """Return center point of boundary box."""
         return np.array(
-            ((self.top + self.bottom) / 2.0, (self.left + self.right) / 2.0)
-        )
+            ((self.top + self.bottom) / 2.0, (self.left + self.right) / 2.0))
 
     def get_format(self) -> str:
         """
