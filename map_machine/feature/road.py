@@ -85,8 +85,7 @@ class RoadPart:
         self.right_offset: float = self.width / 2.0
 
         self.turned: np.ndarray = norm(
-            turn_by_angle(self.point_2 - self.point_1, np.pi / 2.0)
-        )
+            turn_by_angle(self.point_2 - self.point_1, np.pi / 2.0))
         self.right_vector: np.ndarray = self.turned * self.right_offset
         self.left_vector: np.ndarray = -self.turned * self.left_offset
 
@@ -103,17 +102,13 @@ class RoadPart:
     def update(self) -> None:
         """Compute additional points."""
         if self.left_connection is not None:
-            self.right_projection = (
-                self.left_connection + self.right_vector - self.left_vector
-            )
+            self.right_projection = (self.left_connection + self.right_vector -
+                                     self.left_vector)
         if self.right_connection is not None:
-            self.left_projection = (
-                self.right_connection - self.right_vector + self.left_vector
-            )
-        if (
-            self.left_connection is not None
-            and self.right_connection is not None
-        ):
+            self.left_projection = (self.right_connection - self.right_vector +
+                                    self.left_vector)
+        if (self.left_connection is not None
+                and self.right_connection is not None):
             a = np.linalg.norm(self.right_connection - self.point_1)
             b = np.linalg.norm(self.right_projection - self.point_1)
             if a > b:
@@ -127,9 +122,8 @@ class RoadPart:
             max_: float = 100.0
 
             if np.linalg.norm(self.point_middle - self.point_1) > max_:
-                self.point_a = self.point_1 + max_ * norm(
-                    self.point_middle - self.point_1
-                )
+                self.point_a = self.point_1 + max_ * norm(self.point_middle -
+                                                          self.point_1)
                 self.right_outer = self.point_a + self.right_vector
                 self.left_outer = self.point_a + self.left_vector
             else:
@@ -159,8 +153,10 @@ class RoadPart:
         drawing.add(line)
         line: Path = drawing.path(
             (
-                "M", self.point_1 + self.right_vector,
-                "L", self.point_2 + self.right_vector,
+                "M",
+                self.point_1 + self.right_vector,
+                "L",
+                self.point_2 + self.right_vector,
             ),
             fill="none",
             stroke="#FF0000",
@@ -169,8 +165,10 @@ class RoadPart:
         drawing.add(line)
         line = drawing.path(
             (
-                "M", self.point_1 + self.left_vector,
-                "L", self.point_2 + self.left_vector,
+                "M",
+                self.point_1 + self.left_vector,
+                "L",
+                self.point_2 + self.left_vector,
             ),
             fill="none",
             stroke="#0000FF",
@@ -182,25 +180,29 @@ class RoadPart:
         radius: float = 2
 
         if self.right_connection is not None:
-            circle = drawing.circle(
-                self.right_connection, 2.5, fill="#FF0000", opacity=opacity
-            )
+            circle = drawing.circle(self.right_connection,
+                                    2.5,
+                                    fill="#FF0000",
+                                    opacity=opacity)
             drawing.add(circle)
         if self.left_connection is not None:
-            circle = drawing.circle(
-                self.left_connection, 2.5, fill="#0000FF", opacity=opacity
-            )
+            circle = drawing.circle(self.left_connection,
+                                    2.5,
+                                    fill="#0000FF",
+                                    opacity=opacity)
             drawing.add(circle)
 
         if self.right_projection is not None:
-            circle = drawing.circle(
-                self.right_projection, 1.5, fill="#FF0000", opacity=opacity
-            )
+            circle = drawing.circle(self.right_projection,
+                                    1.5,
+                                    fill="#FF0000",
+                                    opacity=opacity)
             drawing.add(circle)
         if self.left_projection is not None:
-            circle = drawing.circle(
-                self.left_projection, 1.5, fill="#0000FF", opacity=opacity
-            )
+            circle = drawing.circle(self.left_projection,
+                                    1.5,
+                                    fill="#0000FF",
+                                    opacity=opacity)
             drawing.add(circle)
 
         if self.right_outer is not None:
@@ -234,27 +236,33 @@ class RoadPart:
         """Draw road part."""
         if self.left_connection is not None:
             path_commands = [
-                "M", self.point_2 + self.right_vector,
-                "L", self.point_2 + self.left_vector,
-                "L", self.left_connection,
-                "L", self.right_connection,
+                "M",
+                self.point_2 + self.right_vector,
+                "L",
+                self.point_2 + self.left_vector,
+                "L",
+                self.left_connection,
+                "L",
+                self.right_connection,
                 "Z",
             ]  # fmt: skip
             drawing.add(drawing.path(path_commands, fill="#CCCCCC"))
 
-    def draw_entrance(
-        self, drawing: svgwrite.Drawing, is_debug: bool = False
-    ) -> None:
+    def draw_entrance(self,
+                      drawing: svgwrite.Drawing,
+                      is_debug: bool = False) -> None:
         """Draw intersection entrance part."""
-        if (
-            self.left_connection is not None
-            and self.right_connection is not None
-        ):
+        if (self.left_connection is not None
+                and self.right_connection is not None):
             path_commands = [
-                "M", self.right_projection,
-                "L", self.right_connection,
-                "L", self.left_projection,
-                "L", self.left_connection,
+                "M",
+                self.right_projection,
+                "L",
+                self.right_connection,
+                "L",
+                self.left_projection,
+                "L",
+                self.left_connection,
                 "Z",
             ]  # fmt: skip
             if is_debug:
@@ -316,10 +324,8 @@ class Intersection:
             part_1.update()
             part_2.update()
 
-            if (
-                part_1.right_connection is None
-                and part_2.left_connection is None
-            ):
+            if (part_1.right_connection is None
+                    and part_2.left_connection is None):
                 part_1.left_connection = part_1.right_projection
                 part_2.right_connection = part_2.left_projection
                 part_1.left_outer = part_1.right_projection
@@ -347,11 +353,9 @@ class Intersection:
 
         if is_debug:
             drawing.add(
-                drawing.path(outer_commands, fill="#0000FF", opacity=0.2)
-            )
+                drawing.path(outer_commands, fill="#0000FF", opacity=0.2))
             drawing.add(
-                drawing.path(inner_commands, fill="#FF0000", opacity=0.2)
-            )
+                drawing.path(inner_commands, fill="#FF0000", opacity=0.2))
 
         for part in self.parts:
             if is_debug:
@@ -380,8 +384,7 @@ class Road(Tagged):
         self.matcher: RoadMatcher = matcher
 
         self.line: Polyline = Polyline(
-            [flinger.fling(node.coordinates) for node in self.nodes]
-        )
+            [flinger.fling(node.coordinates) for node in self.nodes])
         self.width: Optional[float] = matcher.default_width
         self.lanes: list[Lane] = []
 
@@ -401,13 +404,13 @@ class Road(Tagged):
             if ":" in value and len(parts := value.split(":")) == 2:
                 _, lane_string = parts
                 if (lane_number := int(lane_string) - 1) >= len(self.lanes):
-                    self.lanes += [Lane()] * (lane_number + 1 - len(self.lanes))
+                    self.lanes += [Lane()
+                                   ] * (lane_number + 1 - len(self.lanes))
 
         if "width:lanes" in tags:
             try:
                 widths: list[float] = list(
-                    map(float, tags["width:lanes"].split("|"))
-                )
+                    map(float, tags["width:lanes"].split("|")))
                 if len(widths) == len(self.lanes):
                     for index, lane in enumerate(self.lanes):
                         lane.width = widths[index]
@@ -416,10 +419,16 @@ class Road(Tagged):
 
         number: int
         if "lanes:forward" in tags:
-            number = int(tags["lanes:forward"])
+            digits_only = ''.join(
+                [char for char in tags["lanes:forward"] if char.isdigit()])
+            digits_only = digits_only if digits_only else '1'
+            number = int(digits_only)
             map(lambda x: x.set_forward(True), self.lanes[-number:])
         if "lanes:backward" in tags:
-            number = int(tags["lanes:backward"])
+            digits_only = ''.join(
+                [char for char in tags["lanes:backward"] if char.isdigit()])
+            digits_only = digits_only if digits_only else '1'
+            number = int(digits_only)
             map(lambda x: x.set_forward(False), self.lanes[:number])
 
         if "width" in tags:
@@ -449,29 +458,26 @@ class Road(Tagged):
                 if lane_number > 0:
                     self.placement_offset += sum(
                         lane.get_width(self.scale)
-                        for lane in self.lanes[:lane_number]
-                    )
+                        for lane in self.lanes[:lane_number])
                 elif lane_number < 0:
-                    self.placement_offset += (
-                        DEFAULT_LANE_WIDTH * lane_number * self.scale
-                    )
+                    self.placement_offset += (DEFAULT_LANE_WIDTH *
+                                              lane_number * self.scale)
 
                 if place == "left_of":
                     pass
                 elif place == "middle_of":
                     self.placement_offset += (
-                        self.lanes[lane_number].get_width(self.scale) * 0.5
-                    )
+                        self.lanes[lane_number].get_width(self.scale) * 0.5)
                 elif place == "right_of":
                     self.placement_offset += self.lanes[lane_number].get_width(
-                        self.scale
-                    )
+                        self.scale)
                 else:
                     logging.error(f"Unknown placement `{place}`.")
 
     def get_style(
-        self, is_border: bool, is_for_stroke: bool = False
-    ) -> dict[str, Union[int, float, str]]:
+            self,
+            is_border: bool,
+            is_for_stroke: bool = False) -> dict[str, Union[int, float, str]]:
         """Get road SVG style."""
         width: float
         if self.width is not None:
@@ -574,16 +580,13 @@ class Road(Tagged):
 
         for index in range(1, len(self.lanes)):
             lane_offset: float = self.scale * (
-                -self.width / 2.0 + index * self.width / len(self.lanes)
-            )
+                -self.width / 2.0 + index * self.width / len(self.lanes))
 
-            tmp_d=self.line.get_path(self.placement_offset + lane_offset)
+            tmp_d = self.line.get_path(self.placement_offset + lane_offset)
             if tmp_d == None:
                 return
 
-            path: Path = Path(
-                d=tmp_d
-            )
+            path: Path = Path(d=tmp_d)
             style: dict[str, Any] = {
                 "fill": "none",
                 "stroke": color.hex,
@@ -600,13 +603,11 @@ class Road(Tagged):
         if not name:
             return
 
-        tmp_d =self.line.get_path(self.placement_offset + 3.0)
+        tmp_d = self.line.get_path(self.placement_offset + 3.0)
         if tmp_d == None:
             return
 
-        path: Path = svg.path(
-            d=tmp_d, fill="none"
-        )
+        path: Path = svg.path(d=tmp_d, fill="none")
         svg.add(path)
 
         text = svg.add(svg.text.Text(""))
@@ -640,17 +641,14 @@ def get_curve_points(
     """
     width: float = road.width / 2.0 * road.scale
 
-    direction: np.ndarray = (center - road_end) / np.linalg.norm(
-        center - road_end
-    )
+    direction: np.ndarray = (center - road_end) / np.linalg.norm(center -
+                                                                 road_end)
     if is_end:
         direction = -direction
-    left: np.ndarray = turn_by_angle(direction, np.pi / 2.0) * (
-        width + placement_offset
-    )
-    right: np.ndarray = turn_by_angle(direction, -np.pi / 2.0) * (
-        width - placement_offset
-    )
+    left: np.ndarray = turn_by_angle(direction,
+                                     np.pi / 2.0) * (width + placement_offset)
+    right: np.ndarray = turn_by_angle(
+        direction, -np.pi / 2.0) * (width - placement_offset)
 
     return [road_end + left, center + left, center + right, road_end + right]
 
@@ -669,12 +667,10 @@ class Connector:
         self.road_1, self.index_1 = connections[0]
         self.priority = self.road_1.matcher.priority
 
-        self.min_layer: float = min(
-            connection[0].layer for connection in connections
-        )
-        self.max_layer: float = max(
-            connection[0].layer for connection in connections
-        )
+        self.min_layer: float = min(connection[0].layer
+                                    for connection in connections)
+        self.max_layer: float = max(connection[0].layer
+                                    for connection in connections)
         self.scale: float = self.road_1.scale
         self.flinger: Flinger = flinger
 
@@ -735,9 +731,8 @@ class ComplexConnector(Connector):
         self.road_2: Road = connections[1][0]
         self.index_2: int = connections[1][1]
 
-        length: float = (
-            abs(self.road_2.width - self.road_1.width) * self.road_1.scale
-        )
+        length: float = (abs(self.road_2.width - self.road_1.width) *
+                         self.road_1.scale)
         self.road_1.line.shorten(self.index_1, length)
         self.road_2.line.shorten(self.index_2, length)
 
@@ -788,7 +783,8 @@ class ComplexConnector(Connector):
                 filter=filter_.get_funciri(),
             )
         else:
-            path: Path = svg.path(d=["M"] + self.curve_1 + ["M"] + self.curve_2)
+            path: Path = svg.path(d=["M"] + self.curve_1 + ["M"] +
+                                  self.curve_2)
         path.update(self.road_1.get_style(True, True))
         svg.add(path)
 
@@ -798,9 +794,8 @@ class SimpleIntersection(Connector):
 
     def draw(self, svg: Drawing) -> None:
         """Draw connection fill."""
-        for road, _ in sorted(
-            self.connections, key=lambda x: x[0].matcher.priority
-        ):
+        for road, _ in sorted(self.connections,
+                              key=lambda x: x[0].matcher.priority):
             node: OSMNode = self.road_1.nodes[self.index_1]
             point: np.ndarray = self.flinger.fling(node.coordinates)
             circle: Circle = svg.circle(
@@ -838,9 +833,10 @@ class Roads:
                 self.nodes[node.id_] = []
             self.nodes[node.id_].append((road, index))
 
-    def draw(
-        self, svg: Drawing, flinger: Flinger, draw_captions: bool = False
-    ) -> None:
+    def draw(self,
+             svg: Drawing,
+             flinger: Flinger,
+             draw_captions: bool = False) -> None:
         """Draw whole road system."""
         if not self.roads:
             return
@@ -854,17 +850,14 @@ class Roads:
             else:
                 connections = []
                 for end in 0, -1:
-                    connections.append(
-                        [
-                            connection
-                            for connection in self.nodes[road.nodes[end].id_]
-                            if not connection[0].is_transition
-                        ]
-                    )
+                    connections.append([
+                        connection
+                        for connection in self.nodes[road.nodes[end].id_]
+                        if not connection[0].is_transition
+                    ])
                 if len(connections[0]) == 1 and len(connections[1]) == 1:
                     connector: Connector = ComplexConnector(
-                        [connections[0][0], connections[1][0]], flinger
-                    )
+                        [connections[0][0], connections[1][0]], flinger)
                     layered_connectors[road.layer].append(connector)
 
         for connected in self.nodes.values():
@@ -876,11 +869,9 @@ class Roads:
             if len(connected) == 2:
                 road_1, index_1 = connected[0]
                 road_2, index_2 = connected[1]
-                if (
-                    road_1.width == road_2.width
-                    or index_1 not in [0, len(road_1.nodes) - 1]
-                    or index_2 not in [0, len(road_2.nodes) - 1]
-                ):
+                if (road_1.width == road_2.width
+                        or index_1 not in [0, len(road_1.nodes) - 1]
+                        or index_2 not in [0, len(road_2.nodes) - 1]):
                     connector = SimpleConnector(connected, flinger)
                 elif not road_1.is_transition and not road_2.is_transition:
                     connector = ComplexConnector(connected, flinger)
@@ -895,9 +886,8 @@ class Roads:
             layered_connectors[connector.max_layer].append(connector)
 
         for layer in sorted(layered_roads.keys()):
-            roads: list[Road] = sorted(
-                layered_roads[layer], key=lambda x: x.matcher.priority
-            )
+            roads: list[Road] = sorted(layered_roads[layer],
+                                       key=lambda x: x.matcher.priority)
             connectors: list[Connector] = layered_connectors.get(layer)
 
             # Draw borders.
