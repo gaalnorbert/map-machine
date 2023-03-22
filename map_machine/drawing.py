@@ -18,7 +18,7 @@ __email__ = "me@enzet.ru"
 
 PathCommands = list[Union[float, str, np.ndarray]]
 
-DEFAULT_FONT: str = "Meiryo, Helvetica"
+DEFAULT_FONT: str = "Gothic, Meiryo, Helvetica"
 
 
 @dataclass
